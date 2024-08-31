@@ -17,10 +17,10 @@ function buyStuff() {
     for (let i = 10; i > 0; i--) {
         document.getElementById("buyConstantUpgrade" + i).click();
     }
-    for (let i = 7; i > 0; i--) {
+    for (let i = 1; i < 8; i++) {
         document.getElementById("enhancetalisman" + i).click();
     }
-    for (let i = 7; i > 0; i--) {
+    for (let i = 1; i < 8; i++) {
         document.getElementById("leveluptalisman" + i).click();
     }
     const choices = [];
