@@ -1,13 +1,13 @@
-let autoClick = false,
-  autoMine = false,
+let autoClick = false, // default state for auto clicker
+  autoMine = false, // default state for auto miner
   cSpeed = 100; // cSpeed is in ms for time between clicks
 document.addEventListener('keydown', function(event) {
     // Numpad0 to toggle auto click
-    if (event.code === "Numpad0") {
+    if (event.code === "Numpad0") { // code if Numpad 0 is pressed
         event.preventDefault(); 
         autoClick = !autoClick; // toggle autoClick
         console.log(`autoClick set to: ${autoClick}`);
-        if (autoClick) {
+        if (autoClick) { // sounds to play when button is pressed depending if toggle is already on or not
             new Audio("https://www.myinstants.com/media/sounds/nintendo-game-boy-startup.mp3").play();
         } else {
             new Audio("https://www.myinstants.com/media/sounds/pokemon-redblueyellow-run-away-sound-effect.mp3").play();
@@ -15,11 +15,11 @@ document.addEventListener('keydown', function(event) {
     }
     // Numpad0 to toggle auto miner
     // currently only uses bombs when no objects are seen
-    if (event.code === "Numpad1") {
+    if (event.code === "Numpad1") { // code if Numpad 1 is pressed
         event.preventDefault();
         autoMine = !autoMine; // toggle autoMine
         console.log(`autoMine set to: ${autoMine}`);
-        if (autoMine) {
+        if (autoMine) { // sounds to play when button is pressed depending if toggle is already on or not
             new Audio("https://www.myinstants.com/media/sounds/minecraft-creeper-fuse-1.mp3").play();
         } else {
             new Audio("https://www.myinstants.com/media/sounds/cave11_0QWMESM.mp3").play();
@@ -39,13 +39,13 @@ function clickAttack() {
 }
 function bombsAhoy() {
     while (App.game.underground.mine.itemsPartiallyFound < App.game.underground.mine.itemsBuried) {
-        App.game.underground.tools.useTool(2,0,0);
+        App.game.underground.tools.useTool(2,0,0); // while items can be found, use bombs
     }
     if (App.game.underground.battery.charges === App.game.underground.battery.maxCharges) {
-        App.game.underground.battery.discharge();
+        App.game.underground.battery.discharge(); // if discharge is ready use it
     }
 }
-const zeWorker = setInterval(() => { 
+const zeWorker = setInterval(() => { // use functions on interval
     if (autoClick) clickAttack();
     if (autoMine && App.game.underground.mine.itemsPartiallyFound === 0) bombsAhoy();
 }, cSpeed);
