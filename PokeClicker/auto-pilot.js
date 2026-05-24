@@ -1,5 +1,6 @@
 let autoClick = false, // default state for auto clicker
   autoMine = false, // default state for auto miner
+  autoHarvester = false, // default state for auto farm harvester
   cSpeed = 100; // cSpeed is in ms for time between clicks
 document.addEventListener('keydown', function(event) {
     // Numpad0 to toggle auto click
@@ -23,6 +24,18 @@ document.addEventListener('keydown', function(event) {
             new Audio("https://www.myinstants.com/media/sounds/minecraft-creeper-fuse-1.mp3").play();
         } else {
             new Audio("https://www.myinstants.com/media/sounds/cave11_0QWMESM.mp3").play();
+        }
+    }
+    // Numpad2 to toggle auto harvester
+    // will spam harvest all to prevent missing a harvest
+    if (event.code === "Numpad2") { // code if Numpad 2 is pressed
+        event.preventDefault();
+        autoHarvester = !autoHarvester; // toggle autoMine
+        console.log(`autoHarvester set to: ${autoHarvester}`);
+        if (autoHarvester) { // sounds to play when button is pressed depending if toggle is already on or not
+            new Audio("https://www.myinstants.com/media/sounds/farmers-insurance-we-are-farmers-2018.mp3").play();
+        } else {
+            new Audio("https://www.myinstants.com/media/sounds/power-off.mp3").play();
         }
     }
     // Numpad9 to fire nukeMine, should complete the whole board instantly using the chisle (assumes infinite cooldown on chisle)
@@ -66,4 +79,5 @@ function nukeMine() {
 const zeWorker = setInterval(() => { // use functions on interval
     if (autoClick) clickAttack();
     if (autoMine && App.game.underground.mine.itemsPartiallyFound === 0) bombsAhoy();
+    if (autoHarvester) App.game.farming.harvestAll();
 }, cSpeed);
