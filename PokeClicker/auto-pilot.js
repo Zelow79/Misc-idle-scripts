@@ -2,7 +2,8 @@ let autoClick = false, // default state for auto clicker
   autoMine = false, // default state for auto miner
   autoHarvester = false, // default state for farm auto harvester
   autoPlanter = false, // default state for farm auto planter
-  cSpeed = 100; // cSpeed is in ms for time between clicks
+  cSpeed = 100, // cSpeed is in ms for time between clicks
+  oSpeed = 1000; // wait time between iterations of non cSpeed features
 document.addEventListener('keydown', function(event) {
     // Numpad0 to toggle auto click
     if (event.code === "Numpad0") { // code if Numpad 0 is pressed
@@ -90,8 +91,10 @@ function nukeMine() {
     }
 }
 const zeWorker = setInterval(() => { // use functions on interval
-    if (autoClick) clickAttack();
     if (autoMine && App.game.underground.mine.itemsPartiallyFound === 0) bombsAhoy();
     if (autoHarvester) App.game.farming.harvestAll();
     if (autoPlanter) App.game.farming.plantAll(FarmController.selectedBerry());
+}, oSpeed);
+const zeClicker = setInterval(() => { // click attack on inverval
+    if (autoClick) clickAttack();
 }, cSpeed);
