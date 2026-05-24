@@ -1,6 +1,7 @@
 let autoClick = false, // default state for auto clicker
   autoMine = false, // default state for auto miner
-  autoHarvester = false, // default state for auto farm harvester
+  autoHarvester = false, // default state for farm auto harvester
+  autoPlanter = false, // default state for farm auto planter
   cSpeed = 100; // cSpeed is in ms for time between clicks
 document.addEventListener('keydown', function(event) {
     // Numpad0 to toggle auto click
@@ -30,12 +31,24 @@ document.addEventListener('keydown', function(event) {
     // will spam harvest all to prevent missing a harvest
     if (event.code === "Numpad2") { // code if Numpad 2 is pressed
         event.preventDefault();
-        autoHarvester = !autoHarvester; // toggle autoMine
+        autoHarvester = !autoHarvester; // toggle autoHarvester
         console.log(`autoHarvester set to: ${autoHarvester}`);
         if (autoHarvester) { // sounds to play when button is pressed depending if toggle is already on or not
             new Audio("https://www.myinstants.com/media/sounds/farmers-insurance-we-are-farmers-2018.mp3").play();
         } else {
             new Audio("https://www.myinstants.com/media/sounds/power-off.mp3").play();
+        }
+    }
+    // Numpad3 to toggle auto planter
+    // will spam plant all to prevent unused plots **should use your currently selected berry
+    if (event.code === "Numpad3") { // code if Numpad 3 is pressed
+        event.preventDefault();
+        autoPlanter = !autoPlanter; // toggle autoPlanter
+        console.log(`autoPlanter set to: ${autoPlanter}`);
+        if (autoPlanter) { // sounds to play when button is pressed depending if toggle is already on or not
+            new Audio("https://www.myinstants.com/media/sounds/loz_secret_BL9kfi1.mp3").play();
+        } else {
+            new Audio("https://www.myinstants.com/media/sounds/oot_kingzora_slide3.mp3").play();
         }
     }
     // Numpad9 to fire nukeMine, should complete the whole board instantly using the chisle (assumes infinite cooldown on chisle)
@@ -80,4 +93,5 @@ const zeWorker = setInterval(() => { // use functions on interval
     if (autoClick) clickAttack();
     if (autoMine && App.game.underground.mine.itemsPartiallyFound === 0) bombsAhoy();
     if (autoHarvester) App.game.farming.harvestAll();
+    if (autoPlanter) App.game.farming.plantAll();
 }, cSpeed);
