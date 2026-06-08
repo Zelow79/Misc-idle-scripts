@@ -116,7 +116,7 @@ const zeWorker = setInterval(() => { // use functions on interval
     if (autoMine && App.game.underground.mine.itemsPartiallyFound === 0) bombsAhoy();
     if (autoHarvester) App.game.farming.harvestAll();
     if (autoPlanter) App.game.farming.plantAll(FarmController.selectedBerry());
-    if (placeholder) startBF();
+    if (autoBFRestart) startBF();
 }, oSpeed);
 const zeClicker = setInterval(() => { // click attack on inverval
     if (autoClick) clickAttack();
