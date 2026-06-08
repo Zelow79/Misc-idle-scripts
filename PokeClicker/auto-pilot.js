@@ -2,6 +2,7 @@ let autoClick = false, // default state for auto clicker
   autoMine = false, // default state for auto miner
   autoHarvester = false, // default state for farm auto harvester
   autoPlanter = false, // default state for farm auto planter
+  autoBFRestart = false, // default state for battle frontier auto restart
   cSpeed = 100, // cSpeed is in ms for time between clicks
   oSpeed = 1000; // wait time between iterations of non cSpeed features
 document.addEventListener('keydown', function(event) {
@@ -52,6 +53,18 @@ document.addEventListener('keydown', function(event) {
             new Audio("https://www.myinstants.com/media/sounds/oot_kingzora_slide3.mp3").play();
         }
     }
+    // Numpad4 to toggle auto battle frontier restart
+    // will spam startBF function which will start battle frontier when needed *experimental
+    if (event.code === "Numpad4") { // code if Numpad 4 is pressed
+        event.preventDefault();
+        autoBFRestart = !autoBFRestart; // toggle auto battle frontier restart
+        console.log(`autoBFRestart set to: ${autoBFRestart}`);
+        if (autoBFRestart) { // sounds to play when button is pressed depending if toggle is already on or not
+            new Audio("https://www.myinstants.com/media/sounds/final_60a626b637d6cf006f9cebb9_881985_p9h3WM4.mp3").play();
+        } else {
+            new Audio("https://www.myinstants.com/media/sounds/9-3-cartoon-hit-the-breaks.mp3").play();
+        }
+    }
     // Numpad9 to fire nukeMine, should complete the whole board instantly using the chisle (assumes infinite cooldown on chisle)
     if (event.code === "Numpad9") { // code if Numpad 9 is pressed
         event.preventDefault();
@@ -90,10 +103,20 @@ function nukeMine() {
         }
     }
 }
+function startBF() {
+    if (!BattleFrontierRunner.started()) { // check to make sure battle frontier run is not in progress
+        if (BattleFrontierRunner.hasCheckpoint()) { // check for existing run
+            BattleFrontierRunner.start(true); // start from existing run if one exists
+        } else {
+            BattleFrontierRunner.start(false); // else start new run
+        }
+    }
+}
 const zeWorker = setInterval(() => { // use functions on interval
     if (autoMine && App.game.underground.mine.itemsPartiallyFound === 0) bombsAhoy();
     if (autoHarvester) App.game.farming.harvestAll();
     if (autoPlanter) App.game.farming.plantAll(FarmController.selectedBerry());
+    if (placeholder) startBF();
 }, oSpeed);
 const zeClicker = setInterval(() => { // click attack on inverval
     if (autoClick) clickAttack();
