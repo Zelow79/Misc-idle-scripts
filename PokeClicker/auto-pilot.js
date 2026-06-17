@@ -3,7 +3,7 @@ let autoClick = false, // default state for auto clicker
   autoHarvester = false, // default state for farm auto harvester
   autoPlanter = false, // default state for farm auto planter
   autoBFRestart = false, // default state for battle frontier auto restart
-  cSpeed = 100, // cSpeed is in ms for time between clicks
+  cSpeed = 20, // cSpeed is in ms for time between clicks
   oSpeed = 1000; // wait time between iterations of non cSpeed features
 document.addEventListener('keydown', function(event) {
     // Numpad0 to toggle auto click
