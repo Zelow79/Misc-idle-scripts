@@ -1,10 +1,19 @@
 let autoClick = false, // default state for auto clicker
-  autoMine = false, // default state for auto miner
-  autoHarvester = false, // default state for farm auto harvester
-  autoPlanter = false, // default state for farm auto planter
-  autoBFRestart = false, // default state for battle frontier auto restart
-  cSpeed = 20, // cSpeed is in ms for time between clicks
-  oSpeed = 1000; // wait time between iterations of non cSpeed features
+    autoMine = false, // default state for auto miner
+    autoHarvester = false, // default state for farm auto harvester
+    autoPlanter = false, // default state for farm auto planter
+    autoBFRestart = false, // default state for battle frontier auto restart
+    cSpeed = 20, // cSpeed is in ms for time between clicks
+    oSpeed = 1000; // wait time between iterations of non cSpeed features
+
+const timeStamp = {
+    initilized: performance.now(),
+    previous: 0,
+    update() {
+        this.previous = performance.now();
+        return this.previous;
+    }
+}
 document.addEventListener('keydown', function(event) {
     // Numpad0 to toggle auto click
     if (event.code === "Numpad0") { // code if Numpad 0 is pressed
@@ -110,7 +119,25 @@ function startBF() {
         } else {
             BattleFrontierRunner.start(false); // else start new run
         }
+        if (timeStamp.previous > 0) {
+            console.log(timeFormat(performance.now() - timeStamp.previous, "dhms") + " time since last Battle Frontier started (DAYS:HOURS:MINS:SECS)");
+        }
+        timeStamp.update();
     }
+}
+function timeFormat(t, v = null) { // t is in ms
+	let cd = 8.64e7, ch = 3.6e6, cm = 6e4, mf = Math.floor, mr = Math.round,
+		d = mf(t / cd), h = mf((t - d * cd) / ch), m = mf((t - d * cd - h * ch) / cm),
+		s = mf((t - d * cd - h * ch - m * cm) / 1000), ms = mr(t - d * cd - h * ch - m * cm - s * 1000),
+		pad = (n) => n < 10 ? '0' + n : n, msPad = (n) => (n + "").length < 3 ? '0'.repeat(3 - (n + "").length) + n : n;
+	if (ms === 1000) { s++; ms = 0; }
+	if (s === 60) { m++; s = 0; }
+	if (m === 60) { h++; m = 0; }
+	if (v === "hmsms") return [pad(h + d * 24), pad(m), pad(s), msPad(ms)].join(':');
+	if (v === "hms") return [pad(h + d * 24), pad(m), pad(s)].join(':');
+	if (h === 24) { d++; h = 0; }
+	if (v === "dhms") return [pad(d), pad(h), pad(m), pad(s)].join(':');
+	return [pad(d), pad(h), pad(m), pad(s), msPad(ms)].join(':');
 }
 const zeWorker = setInterval(() => { // use functions on interval
     if (autoMine && App.game.underground.mine.itemsPartiallyFound === 0) bombsAhoy();
