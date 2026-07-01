@@ -3,6 +3,7 @@ let autoClick = false, // default state for auto clicker
     autoHarvester = false, // default state for farm auto harvester
     autoPlanter = false, // default state for farm auto planter
     autoBFRestart = false, // default state for battle frontier auto restart
+    autoShopper = false, // default state for auto shopping script
     cSpeed = 20, // cSpeed is in ms for time between clicks
     oSpeed = 1000; // wait time between iterations of non cSpeed features
 
@@ -74,6 +75,18 @@ document.addEventListener('keydown', function(event) {
             new Audio("https://www.myinstants.com/media/sounds/9-3-cartoon-hit-the-breaks.mp3").play();
         }
     }
+    // Numpad5 to toggle auto shopper
+    // will spam zShop function which will attempt to purchase items *just ultraball atm *experimental
+    if (event.code === "Numpad5") { // code if Numpad 5 is pressed
+        event.preventDefault();
+        autoShopper = !autoShopper; // toggle auto auto shopper
+        console.log(`autoShopper set to: ${autoShopper}`);
+        if (autoShopper) { // sounds to play when button is pressed depending if toggle is already on or not
+            new Audio("https://www.myinstants.com/media/sounds/s1_c5-online-audio-converter.mp3").play();
+        } else {
+            new Audio("https://www.myinstants.com/media/sounds/thanks-mon-cheri.mp3").play();
+        }
+    }
     // Numpad9 to fire nukeMine, should complete the whole board instantly using the chisle (assumes infinite cooldown on chisle)
     if (event.code === "Numpad9") { // code if Numpad 9 is pressed
         event.preventDefault();
@@ -125,6 +138,21 @@ function startBF() {
         timeStamp.update();
     }
 }
+function zShop() {
+    const amt2buy = 1; // the amount that is bought
+    const cutoffs = { //  limits to cut off over spending
+        pdonhand: 1e9, // the amount of PD or more required to have on hand to buy
+        ultraball: 1e6
+    }
+    ShopHandler.shopObservable().items.forEach(i => {
+        if (i.name === "Ultraball" // find ultraball
+          && i.price() === i.basePrice // only buy is it's at base price
+          && App.game.wallet.currencies[0]() > cutoffs.pdonhand // and you have enough money
+          && App.game.pokeballs.pokeballs[2].quantity() < cutoffs.ultraball) { // and have less than set cut off
+            i.buy(amt2buy); // make purchase using set amt2buy value
+        }
+    });
+}
 function timeFormat(t, v = null) { // t is in ms
 	let cd = 8.64e7, ch = 3.6e6, cm = 6e4, mf = Math.floor, mr = Math.round,
 		d = mf(t / cd), h = mf((t - d * cd) / ch), m = mf((t - d * cd - h * ch) / cm),
@@ -145,6 +173,7 @@ const zeWorker = setInterval(() => { // use functions on interval
     if (autoPlanter) App.game.farming.plantAll(FarmController.selectedBerry());
     if (autoBFRestart) startBF();
 }, oSpeed);
-const zeClicker = setInterval(() => { // click attack on inverval
-    if (autoClick) clickAttack();
+const zeClicker = setInterval(() => { // actions on inverval
+    if (autoClick) clickAttack(); // click attack
+    if (autoShopper) zShop(); // run zShop function to buy items
 }, cSpeed);
