@@ -141,7 +141,7 @@ function startBF() {
 function zShop() {
     const amt2buy = 10; // the amount that is bought
     const cutoffs = { //  limits to cut off over spending
-        pdonhand: 1e9, // the amount of PD or more required to have on hand to buy
+        pdonhand: 1e6, // the amount of PD or more required to have on hand to buy
         ultraball: 1e6
     }
     ShopHandler.shopObservable().items.forEach(i => {
